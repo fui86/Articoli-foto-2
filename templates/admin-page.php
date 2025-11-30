@@ -232,6 +232,23 @@ defined('ABSPATH') || exit;
                             <?php _e('Puoi incollare HTML. Lascia vuoto per usare il contenuto del template.', 'my-event-plugin'); ?>
                         </p>
                     </div>
+                    
+                    <!-- Genera Prompt Button - Posizionato dopo Contenuto Evento -->
+                    <div class="mep-form-actions" style="margin-bottom: 20px;">
+                        <button type="button" 
+                                class="button button-secondary button-hero" 
+                                id="mep-generate-prompt-btn"
+                                style="background: #e7f5ff; border-color: #0073aa; color: #0073aa;">
+                            <span class="dashicons dashicons-format-chat"></span>
+                            <?php _e('Genera Prompt ChatGPT', 'my-event-plugin'); ?>
+                        </button>
+                        <p style="margin-top: 10px; color: #646970; font-size: 13px;">
+                            <?php _e('Genera un prompt strutturato per ChatGPT. Richiede: titolo evento, foto importate, copertina e categoria.', 'my-event-plugin'); ?>
+                        </p>
+                    </div>
+                    
+                    <!-- Container per il prompt ChatGPT -->
+                    <div id="mep-chatgpt-prompt-container" style="display: none; margin-bottom: 20px;"></div>
                 </div>
                 
                 <!-- SEO Section -->
@@ -282,6 +299,20 @@ defined('ABSPATH') || exit;
                     </div>
                     
                     <div class="mep-form-row">
+                        <label for="seo_permalink" class="mep-label">
+                            <?php _e('Permalink pagina', 'my-event-plugin'); ?>
+                        </label>
+                        <input type="text" 
+                               id="seo_permalink" 
+                               name="seo_permalink" 
+                               class="mep-input large"
+                               placeholder="<?php esc_attr_e('Es: compleanno-mario-rossi (lascia vuoto per generare automaticamente)', 'my-event-plugin'); ?>">
+                        <p class="mep-description">
+                            <?php _e('Lo slug URL dell\'articolo. Usa solo lettere minuscole, numeri e trattini.', 'my-event-plugin'); ?>
+                        </p>
+                    </div>
+                    
+                    <div class="mep-form-row">
                         <label for="seo_description" class="mep-label">
                             <?php _e('Meta Description', 'my-event-plugin'); ?>
                         </label>
@@ -297,23 +328,6 @@ defined('ABSPATH') || exit;
                         </p>
                     </div>
                 </div>
-                
-                <!-- Genera Prompt Button -->
-                <div class="mep-form-actions" style="margin-bottom: 20px;">
-                    <button type="button" 
-                            class="button button-secondary button-hero" 
-                            id="mep-generate-prompt-btn"
-                            style="background: #e7f5ff; border-color: #0073aa; color: #0073aa;">
-                        <span class="dashicons dashicons-format-chat"></span>
-                        <?php _e('Genera Prompt ChatGPT', 'my-event-plugin'); ?>
-                    </button>
-                    <p style="margin-top: 10px; color: #646970; font-size: 13px;">
-                        <?php _e('Clicca per generare il prompt da usare con ChatGPT. Poi compila il contenuto con la risposta di ChatGPT.', 'my-event-plugin'); ?>
-                    </p>
-                </div>
-                
-                <!-- Container per il prompt ChatGPT -->
-                <div id="mep-chatgpt-prompt-container" style="display: none; margin-bottom: 20px;"></div>
                 
                 <!-- Submit Button -->
                 <div class="mep-form-actions">
