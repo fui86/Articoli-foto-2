@@ -1,0 +1,256 @@
+/**
+ * My Event Plugin - Gallery Responsive CSS
+ * Rende la galleria Use-your-Drive completamente responsive
+ */
+
+/* ===== Wrapper Galleria ===== */
+.useyourdrive.mode-gallery.mep-gallery-responsive {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 20px 0;
+}
+
+/* ===== Container Grid Responsive ===== */
+.useyourdrive.mep-gallery-responsive .wpcp-gallery-container,
+.useyourdrive.mep-gallery-responsive .ajax-filelist {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background: transparent !important;
+}
+
+/* ===== Item Galleria ===== */
+.useyourdrive.mep-gallery-responsive .entry.image {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 250px;
+    margin: 0 !important;
+    float: none !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.useyourdrive.mep-gallery-responsive .entry.image .entry_thumbnail {
+    width: 100% !important;
+    height: 250px !important;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* ===== Hover Effect ===== */
+.useyourdrive.mep-gallery-responsive .entry.image .entry_thumbnail:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ===== Immagine ===== */
+.useyourdrive.mep-gallery-responsive .entry.image .entry_thumbnail img,
+.useyourdrive.mep-gallery-responsive .entry.image .entry_thumbnail .preloading {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block;
+}
+
+/* ===== Nome File (opzionale) ===== */
+.useyourdrive.mep-gallery-responsive .entry_link .entry-info {
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.useyourdrive.mep-gallery-responsive .entry-name-view {
+    font-size: 14px;
+    color: #333;
+    word-break: break-word;
+}
+
+/* ===== Icon Overlay ===== */
+.useyourdrive.mep-gallery-responsive .entry_thumbnail .entry-icon-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 48px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    z-index: 10;
+}
+
+.useyourdrive.mep-gallery-responsive .entry.image:hover .entry-icon-overlay {
+    opacity: 1;
+}
+
+/* ===== Overlay Scuro al Hover ===== */
+.useyourdrive.mep-gallery-responsive .entry_thumbnail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.3s ease;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.useyourdrive.mep-gallery-responsive .entry.image:hover .entry_thumbnail::before {
+    background: rgba(0,0,0,0.3);
+}
+
+/* ===== Loading Spinner ===== */
+.useyourdrive.mep-gallery-responsive .entry_thumbnail .preloading {
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.useyourdrive.mep-gallery-responsive .entry_thumbnail .preloading::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e0e0e0;
+    border-top-color: #666;
+    border-radius: 50%;
+    animation: mep-gallery-spin 0.8s linear infinite;
+}
+
+@keyframes mep-gallery-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== Lightbox Button ===== */
+.useyourdrive.mep-gallery-responsive .entry_thumbnail .entry-link-action {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 20;
+    background: rgba(255,255,255,0.9);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.useyourdrive.mep-gallery-responsive .entry.image:hover .entry-link-action {
+    opacity: 1;
+}
+
+/* ===== Responsive Breakpoints ===== */
+
+/* Tablet (max 1024px) */
+@media (max-width: 1024px) {
+    .useyourdrive.mep-gallery-responsive .wpcp-gallery-container,
+    .useyourdrive.mep-gallery-responsive .ajax-filelist {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .useyourdrive.mep-gallery-responsive .entry.image .entry_thumbnail {
+        height: 200px !important;
+        min-height: 200px;
+    }
+}
+
+/* Mobile Landscape (max 768px) */
+@media (max-width: 768px) {
+    .useyourdrive.mep-gallery-responsive .wpcp-gallery-container,
+    .useyourdrive.mep-gallery-responsive .ajax-filelist {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+    
+    .useyourdrive.mep-gallery-responsive .entry.image .entry_thumbnail {
+        height: 150px !important;
+        min-height: 150px;
+        border-radius: 6px;
+    }
+    
+    .useyourdrive.mep-gallery-responsive .entry-icon-overlay {
+        font-size: 36px;
+    }
+}
+
+/* Mobile Portrait (max 480px) */
+@media (max-width: 480px) {
+    .useyourdrive.mep-gallery-responsive .wpcp-gallery-container,
+    .useyourdrive.mep-gallery-responsive .ajax-filelist {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .useyourdrive.mep-gallery-responsive .entry.image .entry_thumbnail {
+        height: 140px !important;
+        min-height: 140px;
+    }
+    
+    .useyourdrive.mep-gallery-responsive .entry-name-view {
+        font-size: 12px;
+    }
+}
+
+/* Small Mobile (max 360px) */
+@media (max-width: 360px) {
+    .useyourdrive.mep-gallery-responsive .wpcp-gallery-container,
+    .useyourdrive.mep-gallery-responsive .ajax-filelist {
+        gap: 8px;
+        padding: 8px;
+    }
+    
+    .useyourdrive.mep-gallery-responsive .entry.image .entry_thumbnail {
+        height: 120px !important;
+        min-height: 120px;
+    }
+}
+
+/* ===== Fix per conflitti con temi ===== */
+.useyourdrive.mep-gallery-responsive * {
+    box-sizing: border-box;
+}
+
+.useyourdrive.mep-gallery-responsive img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ===== Loading State ===== */
+.useyourdrive.mep-gallery-responsive.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ===== Empty State ===== */
+.useyourdrive.mep-gallery-responsive .ajax-filelist:empty::after {
+    content: 'Nessuna immagine disponibile';
+    display: block;
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+}
+
+/* ===== Print Styles (opzionale) ===== */
+@media print {
+    .useyourdrive.mep-gallery-responsive .wpcp-gallery-container,
+    .useyourdrive.mep-gallery-responsive .ajax-filelist {
+        display: block !important;
+    }
+    
+    .useyourdrive.mep-gallery-responsive .entry.image {
+        page-break-inside: avoid;
+        display: inline-block;
+        width: 50%;
+    }
+}
