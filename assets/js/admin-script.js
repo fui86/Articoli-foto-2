@@ -648,23 +648,33 @@
         
         // ===== Genera Prompt ChatGPT =====
         $('#mep-generate-prompt-btn').on('click', function() {
-            // Validazione
+            // Validazione - Titolo Evento richiesto
+            if (!$('#event_title').val().trim()) {
+                alert('⚠️ Scrivi il titolo dell\'evento prima di generare il prompt!');
+                $('#event_title').focus();
+                return;
+            }
+            
+            // Validazione - Foto selezionate
             if (PhotoSelector.selectedPhotos.length === 0) {
                 alert('Seleziona almeno una foto prima di generare il prompt!');
                 return;
             }
             
+            // Validazione - Copertina
             if (!$('#mep-featured-image-select').val()) {
                 alert('Scegli quale foto usare come copertina prima di generare il prompt!');
                 return;
             }
             
+            // Validazione - Categoria
             if (!$('#event_category').val()) {
                 alert('Seleziona una categoria prima di generare il prompt!');
                 return;
             }
             
             // Recupera i dati
+            const eventTitle = $('#event_title').val().trim();
             const folderName = $('#event_folder_name').val() || 'Nome Evento';
             const categoryText = $('#event_category option:selected').text() || 'Categoria';
             const featuredIndex = parseInt($('#mep-featured-image-select').val()) || 0;
@@ -672,26 +682,61 @@
             // Estrai solo il nome del festeggiato (rimuovi la data DD-MM-AAAA dalla fine)
             const nomeFesteggiato = folderName.replace(/\s+\d{2}-\d{2}-\d{4}$/, '').trim() || folderName;
             
-            // Raccogli gli URL delle foto (eccetto la copertina)
+            // Raccogli gli URL delle foto importate (esclusa copertina)
             const photoUrlsForPrompt = [];
-            PhotoSelector.selectedPhotos.forEach((photo, idx) => {
-                if (idx !== featuredIndex && photo.url) {
-                    photoUrlsForPrompt.push(photo.url);
+            $('#mep-imported-links-container a').each(function(idx) {
+                if (idx !== featuredIndex) {
+                    photoUrlsForPrompt.push($(this).attr('href'));
                 }
             });
             
-            // Se non ci sono URL dalle foto selezionate, usa quelli importati
+            // Se non ci sono URL importati, mostra avviso
             if (photoUrlsForPrompt.length === 0) {
-                // Prova a recuperare dagli URL già importati nel container
-                $('#mep-imported-links-container a').each(function(idx) {
-                    if (idx !== featuredIndex) {
-                        photoUrlsForPrompt.push($(this).attr('href'));
-                    }
-                });
+                alert('⚠️ Importa prima le foto in WordPress cliccando "Importa Foto in WordPress"!');
+                return;
             }
             
-            // Genera il prompt
-            const chatGptPrompt = `Scrivi un articolo sui ${categoryText} di ${nomeFesteggiato}. Ecco le foto che devi inserire nell'articolo:\n${photoUrlsForPrompt.join('\n')}`;
+            // Genera slug suggerito
+            const suggestedSlug = eventTitle.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Rimuovi accenti
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .substring(0, 50);
+            
+            // Genera prompt strutturato
+            const chatGptPrompt = `Crea un articolo completo per WordPress sui ${categoryText} di ${nomeFesteggiato}.
+
+**TITOLO EVENTO:** ${eventTitle}
+
+**CATEGORIA:** ${categoryText}
+
+**FOTO DA INSERIRE NELL'ARTICOLO:**
+${photoUrlsForPrompt.map((url, i) => `${i+1}. ${url}`).join('\n')}
+
+**ISTRUZIONI:**
+1. Scrivi un contenuto HTML ben formattato per l'evento
+2. Includi TUTTI i link delle foto nell'articolo usando tag <img> o <figure>
+3. Genera una Focus Keyword SEO appropriata (2-4 parole)
+4. Crea un Titolo SEO ottimizzato (max 60 caratteri)
+5. Suggerisci un Permalink (slug URL) appropriato (es: ${suggestedSlug})
+6. Scrivi una Meta Description accattivante (max 160 caratteri)
+
+**FORMATO RISPOSTA (da copiare nei rispettivi campi):**
+
+--- CONTENUTO EVENTO (HTML) ---
+[Inserisci qui il contenuto HTML completo]
+
+--- FOCUS KEYWORD ---
+[Inserisci keyword]
+
+--- TITOLO SEO ---
+[Inserisci titolo SEO]
+
+--- PERMALINK ---
+[Inserisci slug]
+
+--- META DESCRIPTION ---
+[Inserisci description]`;
             
             // Mostra il prompt
             const promptHtml = `
@@ -701,10 +746,10 @@
                         Prompt per ChatGPT
                     </h4>
                     <p style="margin: 0 0 10px 0; color: #646970; font-size: 13px;">
-                        Copia questo prompt e incollalo in ChatGPT per generare l'articolo. Poi inserisci il contenuto generato nel campo "Contenuto Articolo".
+                        Copia questo prompt e incollalo in ChatGPT. Poi copia le risposte nei campi corrispondenti: Contenuto Evento, Focus Keyword, Titolo SEO, Permalink e Meta Description.
                     </p>
                     <textarea id="mep-chatgpt-prompt" readonly 
-                        style="width: 100%; height: 150px; padding: 10px; border: 1px solid #c3c4c7; border-radius: 4px; 
+                        style="width: 100%; height: 300px; padding: 10px; border: 1px solid #c3c4c7; border-radius: 4px; 
                                font-family: monospace; font-size: 12px; resize: vertical; background: #fff;"
                     >${chatGptPrompt}</textarea>
                     <button type="button" id="mep-copy-prompt-btn" class="button button-primary" 

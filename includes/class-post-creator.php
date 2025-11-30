@@ -76,6 +76,16 @@ class MEP_Post_Creator {
         // 6. Aggiorna titolo e contenuto
         $this->update_post_content($new_post_id, $data);
         
+        // 6b. Imposta permalink personalizzato se specificato
+        if (!empty($form_data['seo_permalink'])) {
+            $slug = sanitize_title($form_data['seo_permalink']);
+            wp_update_post([
+                'ID' => $new_post_id,
+                'post_name' => $slug
+            ]);
+            MEP_Helpers::log_info("Permalink personalizzato impostato: {$slug}");
+        }
+        
         // 7. Imposta categoria
         if (!empty($data['event_category'])) {
             wp_set_post_categories($new_post_id, [$data['event_category']]);
